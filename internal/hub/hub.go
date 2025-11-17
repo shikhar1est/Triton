@@ -56,7 +56,7 @@ func (h *Hub) Run() {
 	}
 }
 
-//In Go, map syntax is used to create a map data structure,
+
 //like map[keyType]valueType, so for example,map[string]int is a map
 // where the keys are strings and the values are integers.
 

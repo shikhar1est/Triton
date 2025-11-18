@@ -1,0 +1,109 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+long getMinKSort(vector<long> serial, int k) {
+    int n = serial.size();
+
+    if (k == 0) {
+        for (int i = 0; i < n - 1; ++i) {
+            if (serial[i] > serial[i + 1]) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    vector<long> sorted_serial = serial;
+    sort(sorted_serial.begin(), sorted_serial.end());
+
+    vector<map<long, int>> group_counts(k);
+
+    for (int i = 0; i < n; ++i) {
+        int group_index = i % k;
+        group_counts[group_index][serial[i]]++;
+        group_counts[group_index][sorted_serial[i]]--;
+    }
+
+    for (int i = 0; i < k; ++i) {
+        for (map<long, int>::iterator it = group_counts[i].begin(); it != group_counts[i].end(); ++it) {
+            if (it->second != 0) {
+                return -1;
+            }
+        }
+    }
+
+    long total_swaps = 0;
+
+    for (int i = 0; i < k; ++i) {
+        int group_size = 0;
+        for (int j = i; j < n; j += k) {
+            group_size++;
+        }
+        
+        if (group_size == 0) continue;
+
+        map<long, int> target_pos;
+        for (int j = 0; j < group_size; ++j) {
+            target_pos[sorted_serial[i + j * k]] = j;
+        }
+
+        vector<bool> visited(group_size, false);
+
+        for (int j = 0; j < group_size; ++j) {
+            if (visited[j]) {
+                continue;
+            }
+
+            int cycle_size = 0;
+            int curr = j;
+            while (!visited[curr]) {
+                visited[curr] = true;
+                cycle_size++;
+                
+                long val = serial[i + curr * k];
+                int next_pos = target_pos[val];
+                curr = next_pos;
+            }
+
+            if (cycle_size > 0) {
+                total_swaps += (cycle_size - 1);
+            }
+        }
+    }
+
+    return total_swaps;
+}
+
+
+int main() {
+    vector<long> serial0;
+    serial0.push_back(7);
+    serial0.push_back(3);
+    serial0.push_back(1);
+    serial0.push_back(9);
+    serial0.push_back(28);
+    int k0 = 2;
+    cout << "Sample 0 Output: " << getMinKSort(serial0, k0) << endl;
+
+    vector<long> serial1;
+    serial1.push_back(2);
+    serial1.push_back(1);
+    serial1.push_back(4);
+    serial1.push_back(3);
+    serial1.push_back(6);
+    serial1.push_back(5);
+    int k1 = 3;
+    cout << "Sample 1 Output: " << getMinKSort(serial1, k1) << endl;
+
+    vector<long> serial_ex;
+    serial_ex.push_back(6);
+    serial_ex.push_back(4);
+    serial_ex.push_back(1);
+    serial_ex.push_back(2);
+    serial_ex.push_back(3);
+    int k_ex = 2;
+    cout << "Example Output: " << getMinKSort(serial_ex, k_ex) << endl;
+
+    return 0;
+}

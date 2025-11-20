@@ -2,7 +2,7 @@ package hub
 
 import "log"
 
-type Hub struct { //Hub is a central message broker viewed as the core component
+type Hub struct { //Hub is a central message broker viewed as the core componen
 	// for managing client connections and broadcasting messages.
 	//It's basically the brain of a real-time communication system.
 	//It  manages all connected clients,registers new clients,
